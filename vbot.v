@@ -43,8 +43,9 @@ fn on_interaction(mut client discord.Client, interaction &discord.Interaction) {
 
 fn sanitize(argument string) ? {
 	for letter in argument {
-		if !(letter.is_letter() || letter.is_digit() || letter == `.`) {
-			return error("character not allowed")
+		match letter {
+			`0`...`9`, `a`...`z`, `A`...`Z`, `.`, `_` {}
+			else { return error("") } 
 		}
 	}
 }
@@ -54,11 +55,11 @@ fn vlib_command(options [][]string) string {
 	query := options[1][1]
 
 	sanitize(vlib_module) or {
-		return '{"content": "Module failed sanitization test."}'
+		return '{"content": "Only letters, numbers, ., and _ are allowed in module names."}'
 	}
 
 	sanitize(query) or {
-		return '{"content": "Query failed sanitization test."}'
+		return '{"content": "Only letters, numbers, ., and _ are allowed in queries."}'
 	}
 
 	result := os.execute("v doc -f json -o stdout $vlib_module $query")
