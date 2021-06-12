@@ -41,11 +41,27 @@ fn on_interaction(mut client discord.Client, interaction &discord.Interaction) {
 	}
 }
 
+fn sanitize(argument string) ? {
+	for letter in argument {
+		if !(letter.is_letter() || letter.is_digit() || letter == `.`) {
+			return error("character not allowed")
+		}
+	}
+}
+
 fn vlib_command(options [][]string) string {
 	vlib_module := options[0][1]
 	query := options[1][1]
 
-	result := os.execute("v doc -f json -o stdout $vlib_module")
+	sanitize(vlib_module) or {
+		return '{"content": "Module failed sanitization test."}'
+	}
+
+	sanitize(query) or {
+		return '{"content": "Query failed sanitization test."}'
+	}
+
+	result := os.execute("v doc -f json -o stdout $vlib_module $query")
 
 	if result.exit_code != 0 {
 		return '{"content": "Module `$vlib_module` not found."}'
@@ -93,7 +109,8 @@ fn vlib_command(options [][]string) string {
 
 fn load_docs_headers() []string {
 	mut headers := []string{}
-	content := os.read_file("/home/mark/.v/doc/docs.md") or { panic(err) }
+	
+	content := os.read_file("${os.home_dir()}/.v/doc/docs.md") or { panic(err) }
 
 	for line in content.split_into_lines() {
 		stripped := line.trim_space()
