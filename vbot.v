@@ -5,6 +5,8 @@ import x.json2
 import strings
 import arrays
 
+#flag -L /usr/lib/gcc/aarch64-linux-gnu/9
+
 const bot_token = os.getenv("VBOT_TOKEN")
 
 struct State {
@@ -134,7 +136,7 @@ fn docs_command(options [][]string, headers []string) string {
 	lowest := arrays.min(scores)
 	header := headers[scores.index(lowest)]
 
-	return '{"content": "https://github.com/vlang/v/blob/master/doc/docs.md$header"}'
+	return '{"content": "<https://github.com/vlang/v/blob/master/doc/docs.md$header>"}'
 }
 
 
