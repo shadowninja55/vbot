@@ -5,8 +5,6 @@ import x.json2
 import strings
 import arrays
 
-#flag -L /usr/lib/gcc/aarch64-linux-gnu/9
-
 const bot_token = os.getenv("VBOT_TOKEN")
 
 struct State {
