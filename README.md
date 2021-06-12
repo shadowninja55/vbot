@@ -1,2 +1,3 @@
 # vbot
-source code for V's VBot.
+
+moved to https://github.com/vlang/discord-bot.
